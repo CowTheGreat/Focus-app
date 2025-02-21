@@ -1,28 +1,3 @@
-const toggler = document.getElementById("darkmode-toggle");
-const mode = document.getElementById("modeBG");
-const timer = document.getElementById("timer");
-const textArea = document.getElementById("downloadTextArea");
-const todo = document.getElementById("todo-app");
-const downloadContainer = document.getElementById("downloadContainer");
-
-// Dark Mode
-
-toggler.addEventListener("click", function onClick(event) {
-  mode.classList.remove("mediMode");
-  mode.classList.remove("pomoMode");
-  mode.classList.remove("breakMode");
-  mode.classList.toggle("darkMode");
-  mode.classList.toggle("lightMode");
-  timer.classList.toggle("timerDarkTheme");
-  timer.classList.toggle("timerLightTheme");
-  textArea.classList.toggle("textAreaDark");
-  textArea.classList.toggle("textAreaLight");
-  downloadContainer.classList.toggle("textAreaDark");
-  downloadContainer.classList.toggle("textAreaLight");
-  todo.classList.toggle("todoDarkTheme");
-  todo.classList.toggle("todoLightTheme");
-});
-
 // Timer
 class Timer {
   constructor(root) {
@@ -34,7 +9,7 @@ class Timer {
       break: root.querySelector(".timer_btn-break"),
       meditate: root.querySelector(".timer_btn-meditate"),
       pomodoro: root.querySelector(".timer_btn-pomodoro"),
-      currentMode: 0, // 0 = base , 1 = pomo, 2 = break, 3 = medi
+      currentMode: 0, // 0 = base, 1 = pomo, 2 = break, 3 = medi
     };
 
     this.interval = null;
@@ -76,6 +51,7 @@ class Timer {
     mode.classList.remove("breakMode");
     mode.classList.remove("mediMode");
     mode.classList.add("pomoMode");
+    mode.classList.add("mode-transition"); // Adding transition for mode change
     this.remainingSeconds = 1500;
     this.updateInterfaceTime();
     this.currentMode = 1;
@@ -85,6 +61,7 @@ class Timer {
     mode.classList.remove("mediMode");
     mode.classList.remove("pomoMode");
     mode.classList.add("breakMode");
+    mode.classList.add("mode-transition"); // Adding transition for mode change
     this.remainingSeconds = 300;
     this.updateInterfaceTime();
     this.currentMode = 2;
@@ -94,6 +71,7 @@ class Timer {
     mode.classList.remove("pomoMode");
     mode.classList.remove("breakMode");
     mode.classList.add("mediMode");
+    mode.classList.add("mode-transition"); // Adding transition for mode change
     this.remainingSeconds = 120;
     this.updateInterfaceTime();
     this.currentMode = 3;
@@ -117,10 +95,14 @@ class Timer {
       this.el.control.innerHTML = `<span class="material-icons"> play_arrow </span>`;
       this.el.control.classList.add("timer_btn-start");
       this.el.control.classList.remove("timer_btn-stop");
+      // Add a transition effect to the button when stopped
+      this.el.control.style.transform = "scale(1)";
     } else {
       this.el.control.innerHTML = `<span class="material-icons"> pause </span>`;
       this.el.control.classList.remove("timer_btn-start");
       this.el.control.classList.add("timer_btn-stop");
+      // Add a transition effect to the button when active
+      this.el.control.style.transform = "scale(1.1)";
     }
   }
 
@@ -134,7 +116,7 @@ class Timer {
         this.stop();
         this.endsound();
       }
-    }, 1000); //for every 1000 milli second code will run
+    }, 1000);
 
     this.updateInterfaceControls();
   }
@@ -145,15 +127,18 @@ class Timer {
     this.interval = null;
     this.updateInterfaceControls();
 
-    if (this.currentMode === 1) {
-      this.breakTime();
-      this.start();
-    } else if (this.currentMode === 2) {
-      this.pomodoro();
-      this.start();
-    }
+    // You could add a delay before switching to the next mode
+    setTimeout(() => {
+      if (this.currentMode === 1) {
+        this.breakTime();
+        this.start();
+      } else if (this.currentMode === 2) {
+        this.pomodoro();
+        this.start();
+      }
+    }, 500); // Adding a small delay for smoother transition
   }
 }
 
-// import Timer from "./timer.js";
 new Timer(document.querySelector(".timer"));
+

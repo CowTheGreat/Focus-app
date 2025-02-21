@@ -29,7 +29,7 @@
     /* border: 2px solid #ccc; */
     border-radius: 4px;
     background-color: #f5deb3; /* Keep wheat but use a slightly lighter shade for better contrast */
-  color: #222; /* Darker text for improved readability */
+    color: #222; /* Darker text for improved readability */
   }
 
   .downloadText {

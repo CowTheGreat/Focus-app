@@ -3,14 +3,7 @@ body {
   font-family: sans-serif;
 }
 
-/* .container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
-
 /* Timer */
-
 .transBox {
   position: absolute;
 }
@@ -39,6 +32,7 @@ body {
   opacity: 1;
   font-weight: bolder;
   color: #ffffff; /* Darker shade for better contrast */
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .timerButtons {
@@ -51,94 +45,38 @@ body {
 }
 
 .timer_btn {
-  /* width: 50px;
-  height: 50px; */
   margin-left: 10px;
   border-radius: 50%;
   border: none;
   color: white;
   background: #6a1b9a; /* A deeper purple for better contrast */
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-@media screen and (min-width: 801px) {
-  .timer {
-    width: 20vw;
-    height: 15vw;
-    font-family: sans-serif;
-    display: flex;
-    padding: 14px 32px;
-    border-radius: 30px;
-    justify-content: center;
-    align-items: center;
-    /* position: static; */
-  }
-  .timer_btn {
-    width: 50px;
-    height: 50px;
-  }
-  .material-icons {
-    height: 24px;
-    width: 24px;
-    font-size: 24px;
-  }
+.timer_btn:hover {
+  transform: scale(1.1); /* Button grows slightly when hovered */
 }
 
-/* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
-@media screen and (max-width: 800px) {
-  header {
-    height: 20vh;
-  }
-  .timer {
-    width: 65vw;
-    height: 30vw;
-    font-family: sans-serif;
-    display: flex;
-    padding: 14px 32px;
-    border-radius: 30px;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    margin: 0 auto;
-  }
-  .timer_btn {
-    width: 50px;
-    height: 50px;
-  }
-  .material-icons {
-    height: 24px;
-    width: 24px;
-    font-size: 24px;
-  }
+.timer_btn:active {
+  background-color: #4a148c; /* Slightly darker purple on click */
 }
 
-.timer_part {
-  font-size: 36px;
-  font-weight: bold;
-}
-
-.timer_btn-pomodoro {
-  background-color: #d8860b;
-}
-
-.timer_btn-break {
-  background-color: aqua;
-}
-
-.timer_btn-meditate {
-  background-color: greenyellow;
-}
-
-.timer_btn-start {
-  background: green;
-}
-
+.timer_btn-start,
 .timer_btn-stop {
-  background: #d32f2f; /* A slightly muted red */
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.timer_start {
+  opacity: 1;
+}
+
+.timer_stop {
+  opacity: 0;
+  transform: scale(0.9);
 }
 
 /* Mode Toggler */
-
 #modeBG {
   z-index: -1;
   transition: 0.3s;
@@ -153,6 +91,7 @@ body {
   height: 50px;
   width: 150px;
 }
+
 label {
   width: 100%;
   height: 100%;
@@ -163,6 +102,7 @@ label {
   box-shadow: inset 0px 5px 15px rgba(0, 0, 0, 0.4),
     inset 0px -5px 15px rgba(255, 255, 255, 0.4);
   cursor: pointer;
+  transition: 0.3s;
 }
 
 label:after {
@@ -175,6 +115,7 @@ label:after {
   background: linear-gradient(180deg, #ffcc89, #d8860b);
   border-radius: 180px;
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
 }
 
 header input {
@@ -182,22 +123,45 @@ header input {
   height: 0;
   visibility: hidden;
 }
+
 input:checked + label {
   background: #ebebeb;
 }
+
 input:checked + label:after {
   left: 10px;
   transform: translateX(-5%);
   background: linear-gradient(180deg, #777, #3a3a3a);
 }
-label,
-label:after {
-  transition: 0.3s;
-}
-label:active:after {
-  width: 100%;
+
+label img {
+  position: absolute;
+  width: 40px;
+  top: 10px;
+  z-index: 100;
 }
 
+label img.sun {
+  left: 10px;
+  fill: #fff;
+  transition: 0.3s;
+}
+
+label img.moon {
+  right: 10px;
+  fill: #7e7e7e;
+  transition: 0.3s;
+}
+
+input:checked + label img.sun {
+  fill: #7e7e7e;
+}
+
+input:checked + label img.moon {
+  fill: #fff;
+}
+
+/* Timer Modes */
 .lightMode {
   background: #fff;
 }
@@ -219,31 +183,11 @@ label:active:after {
   background-color: rgb(200, 255, 117);
 }
 
-label img {
-  position: absolute;
-  width: 40px;
-  top: 10px;
-  z-index: 100;
-}
-label img.sun {
-  left: 10px;
-  fill: #fff;
-  transition: 0.3s;
-}
-label img.moon {
-  right: 10px;
-  fill: #7e7e7e;
-  transition: 0.3s;
-}
-input:checked + label img.sun {
-  fill: #7e7e7e;
-}
-input:checked + label img.moon {
-  fill: #fff;
+.timer {
+  transition: background-color 0.5s ease-in-out, opacity 0.5s ease;
 }
 
 /* Details */
-
 .h3 {
   font-size: 20px;
 }
@@ -284,20 +228,20 @@ a {
 .paragraph {
   font-family: sans-serif;
   font-size: 16px;
-  /* padding-bottom: 15px; */
 }
 
+/* Media Queries */
 @media screen and (min-width: 801px) {
   #modeBG {
     display: flex;
     height: 100vh;
   }
+
   .mobile {
     display: none;
   }
 }
 
-/* If the screen size is 800px wide or less, set the font-size of <div> to 30px */
 @media screen and (max-width: 800px) {
   #modeBG {
     display: block;
@@ -307,4 +251,29 @@ a {
   .pc {
     display: none;
   }
+
+  .timer {
+    width: 65vw;
+    height: 30vw;
+    font-family: sans-serif;
+    display: flex;
+    padding: 14px 32px;
+    border-radius: 30px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin: 0 auto;
+  }
+
+  .timer_btn {
+    width: 50px;
+    height: 50px;
+  }
+
+  .material-icons {
+    height: 24px;
+    width: 24px;
+    font-size: 24px;
+  }
 }
+

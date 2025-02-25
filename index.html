@@ -8,7 +8,6 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
-
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -40,16 +39,15 @@
       <div class="darkMode" id="modeBG">
         <!-- Notes Taker -->
         <div class="pc">
-        <div class="downloadContainer textAreaDark" id="downloadContainer">
-          <div class="enterNotes">Enter Notes</div>
-          <textarea class="download-area textAreaDark" id="downloadTextArea">
-          </textarea>
-          <br />
-          <button onclick="downloadFile()" class="download-btn">
-            <i class="fa fa-download"></i>
-            <div class="downloadText">Download</div>
-          </button>
-        </div>
+          <div class="downloadContainer textAreaDark" id="downloadContainer">
+            <div class="enterNotes">Enter Notes</div>
+            <textarea class="download-area textAreaDark" id="downloadTextArea"></textarea>
+            <br />
+            <button onclick="downloadFile()" class="download-btn">
+              <i class="fa fa-download"></i>
+              <div class="downloadText">Download</div>
+            </button>
+          </div>
         </div>
 
         <!-- Timer Element -->
@@ -106,7 +104,7 @@
           <div class="toDoListHeading">
             To-Do List 
             <img class="todoIcon" src="Sources/Images/icon.png" />
-          </div class="toDoListHeading">
+          </div>
           <div class="todoRow">
             <input
               type="text"
@@ -115,22 +113,9 @@
               placeholder="Add your text"
             />
             <button onclick="addTask()" class="todoButton">Add</button>
-            <div></div>
           </div>
           <ul id="todo-list-container"></ul>
         </div>
-        <div class="mobile">
-        <div class="downloadContainer textAreaDark" id="downloadContainer">
-          <div class="enterNotes">Enter Notes</div>
-          <textarea class="download-area textAreaDark" id="downloadTextArea">
-          </textarea>
-          <br />
-          <button onclick="downloadFile()" class="download-btn">
-            <i class="fa fa-download"></i>
-            <div class="downloadText">Download</div>
-          </button>
-        </div>
-      </div>
       </div>
 
       <!-- Description -->
@@ -139,7 +124,7 @@
           <h1>An online Focus Timer to boost your productivity</h1>
           <h3>What is Moocuss ???</h3>
           <div class="paragraph">
-            Moocuss is a customizable focous timer that works on desktop &
+            Moocuss is a customizable focus timer that works on desktop &
             mobile browser. The aim of this app is to help you focus on any task
             you are working on, such as study, writing, or coding. This app is
             inspired by Pomodoro Technique which is a time management method
@@ -165,10 +150,7 @@
             kitchen timer. The technique involves breaking work into 25-minute
             intervals, called "Pomodoros," followed by a short break. After four
             cycles, take a longer break. The structured approach helps maintain
-            concentration, manage distractions, and prevent burnout. Its
-            simplicity and adaptability have made it popular worldwide, aiding
-            individuals in boosting efficiency and completing tasks with
-            increased concentration and reduced procrastination.
+            concentration, manage distractions, and prevent burnout.
           </div>
         </div>
 
@@ -209,13 +191,108 @@
             <li>To-do lists</li>
             <li>Pomodoro Timer</li>
             <li>Note-Taking Tools</li>
-            <li>Focus Music </li>
+            <li>Focus Music</li>
           </ol>
         </div>
       </div>
     </div>
-    <script src="main.js" type="module"></script>
-    <script src="todo.js"></script>
-    <script src="notes.js"></script>
+
+    <script>
+      // Task Functions
+      function saveTasks() {
+        const tasks = [];
+        const taskItems = document.querySelectorAll('#todo-list-container li');
+        taskItems.forEach(item => {
+          tasks.push(item.textContent.trim());
+        });
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+      }
+
+      function loadTasks() {
+        const savedTasks = localStorage.getItem('tasks');
+        if (savedTasks) {
+          const tasks = JSON.parse(savedTasks);
+          tasks.forEach(task => {
+            addTaskToUI(task);
+          });
+        }
+      }
+
+      function addTaskToUI(task) {
+        const li = document.createElement('li');
+        li.textContent = task;
+        document.getElementById('todo-list-container').appendChild(li);
+      }
+
+      function addTask() {
+        const input = document.getElementById('todo-input-box');
+        const task = input.value.trim();
+        if (task) {
+          addTaskToUI(task);
+          saveTasks();
+        }
+        input.value = '';
+      }
+
+      // Timer Functions
+      let timerInterval;
+      let timeLeft = 25 * 60; // Start with 25 minutes for Pomodoro
+
+      function saveTimerSettings() {
+        localStorage.setItem('timeLeft', timeLeft);
+      }
+
+      function loadTimerSettings() {
+        const savedTimeLeft = localStorage.getItem('timeLeft');
+        if (savedTimeLeft) {
+          timeLeft = parseInt(savedTimeLeft, 10);
+          updateTimerDisplay();
+        }
+      }
+
+      function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.querySelector('.timer_part-minutes').textContent = formatTime(minutes);
+        document.querySelector('.timer_part-seconds').textContent = formatTime(seconds);
+      }
+
+      function formatTime(time) {
+        return time < 10 ? `0${time}` : time;
+      }
+
+      function startTimer() {
+        timerInterval = setInterval(() => {
+          if (timeLeft > 0) {
+            timeLeft--;
+            updateTimerDisplay();
+            saveTimerSettings();
+          } else {
+            clearInterval(timerInterval);
+          }
+        }, 1000);
+      }
+
+      function stopTimer() {
+        clearInterval(timerInterval);
+      }
+
+      function resetTimer() {
+        timeLeft = 25 * 60;
+        updateTimerDisplay();
+        saveTimerSettings();
+      }
+
+      window.onload = () => {
+        loadTasks();
+        loadTimerSettings();
+      }
+
+      // Sample button listeners
+      document.querySelector('.timer_btn-start').addEventListener('click', startTimer);
+      document.querySelector('.timer_btn-control').addEventListener('click', stopTimer);
+      document.querySelector('.timer_btn-timer').addEventListener('click', resetTimer);
+    </script>
   </body>
 </html>
+
